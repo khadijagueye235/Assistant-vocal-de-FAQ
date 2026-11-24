@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.env
+*.wav
+*.mp3
+!data/audio_test/.gitkeep

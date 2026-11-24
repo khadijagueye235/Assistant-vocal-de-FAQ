@@ -1,0 +1,7 @@
+faster-whisper
+sentence-transformers
+edge-tts
+gradio
+pandas
+openpyxl
+numpy
