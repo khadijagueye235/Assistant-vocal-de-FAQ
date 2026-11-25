@@ -6,11 +6,13 @@ import glob
 import importlib.util
 import logging
 import os
+import shutil
 import subprocess
 import time
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+from typing import Union
 
 import ctranslate2
 import numpy as np
@@ -22,10 +24,16 @@ logger = logging.getLogger(__name__)
 
 FREQUENCE_HZ = 16_000  # fréquence attendue par Whisper
 
+# Formes d'audio acceptées par transcrire() :
+# - chemin de fichier (wav, mp3, m4a...) : cas des fichiers du jeu de test ;
+# - tableau numpy : signal mono float32 déjà échantillonné à 16 kHz ;
+# - tuple (fréquence, tableau) : format renvoyé par défaut par gr.Audio de Gradio.
+EntreeAudio = Union[str, Path, np.ndarray, tuple[int, np.ndarray]]
+
 
 @dataclass(frozen=True)
 class Transcription:
-    """Résultat d'une transcription."""
+    """Résultat d'une transcription. Les durées sont en secondes, non arrondies."""
     texte: str
     duree_audio_s: float
     temps_s: float
@@ -83,43 +91,108 @@ def charger_modele(nom: str = WHISPER_MODELE) -> WhisperModel:
     return WhisperModel(nom, device=device, compute_type=compute_type)
 
 
-def lire_audio(chemin: Path) -> np.ndarray:
-    """Décode un fichier audio (wav, mp3, m4a...) en signal mono 16 kHz float32, via ffmpeg."""
-    commande = [
-        "ffmpeg", "-nostdin", "-loglevel", "error", "-i", str(chemin),
-        "-f", "f32le", "-ac", "1", "-ar", str(FREQUENCE_HZ), "-",
-    ]
-    resultat = subprocess.run(commande, capture_output=True)
+def prechauffer(nom: str = WHISPER_MODELE) -> None:
+    """Charge le modèle et fait une inférence à vide.
+
+    Le premier appel paie des coûts uniques (initialisation CUDA, allocation
+    mémoire). À appeler au démarrage, sinon la première question mesurée
+    paraît anormalement lente et fausse la moyenne des latences.
+    """
+    modele = charger_modele(nom)
+    silence = np.zeros(FREQUENCE_HZ, dtype=np.float32)  # 1 s
+    # Sans VAD : sinon le silence serait retiré et le modèle ne calculerait rien.
+    segments, _ = modele.transcribe(silence, language=LANGUE, vad_filter=False)
+    list(segments)  # force le calcul (générateur paresseux)
+
+
+def _verifier_ffmpeg() -> str:
+    """Renvoie le chemin de ffmpeg, ou lève une erreur qui explique quoi installer."""
+    chemin = shutil.which("ffmpeg")
+    if chemin is None:
+        raise RuntimeError(
+            "ffmpeg est introuvable. Installez-le : "
+            "Colab/Linux « apt install ffmpeg », "
+            "Windows « winget install Gyan.FFmpeg.Essentials », "
+            "puis ouvrez un nouveau terminal."
+        )
+    return chemin
+
+
+def _ffmpeg_vers_16k_mono(arguments_entree: list[str], donnees: bytes | None = None) -> np.ndarray:
+    """Fait passer un audio par ffmpeg pour obtenir du mono 16 kHz float32."""
+    commande = [_verifier_ffmpeg(), "-loglevel", "error"]
+    if donnees is None:
+        commande.append("-nostdin")  # ffmpeg ne doit pas lire le clavier
+    commande += [*arguments_entree, "-f", "f32le", "-ac", "1", "-ar", str(FREQUENCE_HZ), "-"]
+    resultat = subprocess.run(commande, input=donnees, capture_output=True)
     if resultat.returncode != 0:
         erreur = resultat.stderr.decode(errors="replace").strip()
-        raise RuntimeError(f"ffmpeg n'a pas pu lire {chemin} : {erreur}")
-    signal = np.frombuffer(resultat.stdout, dtype=np.float32)
+        raise RuntimeError(f"ffmpeg n'a pas pu décoder l'audio : {erreur}")
+    return np.frombuffer(resultat.stdout, dtype=np.float32)
+
+
+def lire_audio(chemin: Path) -> np.ndarray:
+    """Décode un fichier audio (wav, mp3, m4a...) en signal mono 16 kHz float32."""
+    signal = _ffmpeg_vers_16k_mono(["-i", str(chemin)])
     if signal.size == 0:
         raise ValueError(f"Fichier audio vide : {chemin}")
     return signal
 
 
+def _depuis_gradio(frequence: int, signal: np.ndarray) -> np.ndarray:
+    """Convertit le tuple (fréquence, tableau) de Gradio en mono 16 kHz float32.
+
+    Gradio fournit souvent de l'int16, parfois stéréo (forme (n, 2)), à 44,1 ou
+    48 kHz. On normalise dans [-1, 1], on moyenne les canaux, puis ffmpeg
+    rééchantillonne (meilleure qualité qu'une interpolation maison).
+    """
+    if signal.size == 0:
+        raise ValueError("Enregistrement vide : aucun son reçu du micro.")
+    if np.issubdtype(signal.dtype, np.integer):
+        signal = signal.astype(np.float32) / np.iinfo(signal.dtype).max
+    signal = signal.astype(np.float32)
+    if signal.ndim == 2:
+        signal = signal.mean(axis=1)
+    if frequence == FREQUENCE_HZ:
+        return signal
+    return _ffmpeg_vers_16k_mono(
+        ["-f", "f32le", "-ac", "1", "-ar", str(frequence), "-i", "pipe:0"],
+        donnees=signal.tobytes(),
+    )
+
+
+def preparer_audio(audio: EntreeAudio) -> np.ndarray:
+    """Ramène n'importe quelle entrée acceptée à un signal mono 16 kHz float32."""
+    if isinstance(audio, tuple):
+        frequence, signal = audio
+        return _depuis_gradio(int(frequence), np.asarray(signal))
+    if isinstance(audio, np.ndarray):
+        if audio.size == 0:
+            raise ValueError("Signal audio vide.")
+        return audio.astype(np.float32, copy=False)
+    chemin = Path(audio)
+    if not chemin.is_file():
+        raise FileNotFoundError(f"Audio introuvable : {chemin}")
+    return lire_audio(chemin)
+
+
 def transcrire(
-    audio: str | Path,
+    audio: EntreeAudio,
     nom_modele: str = WHISPER_MODELE,
     langue: str = LANGUE,
     beam_size: int = 5,
     prompt_initial: str | None = None,
 ) -> Transcription:
-    """Transcrit un fichier audio (wav, mp3, m4a...).
+    """Transcrit un audio : chemin de fichier, tableau numpy 16 kHz ou tuple Gradio.
 
-    temps_s couvre le décodage du fichier, le VAD et la transcription,
-    donc ce que l'utilisateur attend réellement.
+    temps_s couvre la préparation de l'audio, le VAD et la transcription,
+    donc ce que l'utilisateur attend réellement (hors chargement du modèle).
     """
-    chemin = Path(audio)
-    if not chemin.is_file():
-        raise FileNotFoundError(f"Audio introuvable : {chemin}")
-
     modele = charger_modele(nom_modele)
 
     debut = time.perf_counter()
-    signal = lire_audio(chemin)
-    segments, info = modele.transcribe(
+    signal = preparer_audio(audio)
+    segments, _ = modele.transcribe(
         signal,
         language=langue,
         beam_size=beam_size,
@@ -134,6 +207,6 @@ def transcrire(
 
     return Transcription(
         texte=texte,
-        duree_audio_s=round(len(signal) / FREQUENCE_HZ, 2),
-        temps_s=round(temps, 2),
+        duree_audio_s=len(signal) / FREQUENCE_HZ,
+        temps_s=temps,
     )
