@@ -1,7 +1,11 @@
 """ASR : audio -> texte français avec faster-whisper et filtre VAD."""
 from __future__ import annotations
 
+import ctypes
+import glob
+import importlib.util
 import logging
+import os
 import subprocess
 import time
 from dataclasses import dataclass
@@ -32,8 +36,38 @@ class Transcription:
         return not self.texte
 
 
+def _precharger_bibliotheques_cuda() -> None:
+    """Charge cuBLAS et cuDNN installés par pip (nvidia-cublas-cu12, nvidia-cudnn-cu12).
+
+    CTranslate2 les cherche dans les chemins système, où elles ne sont pas.
+    Deux passes : certaines bibliothèques dépendent d'autres pas encore chargées.
+    """
+    fichiers: list[str] = []
+    for paquet in ("nvidia.cublas.lib", "nvidia.cudnn.lib"):
+        try:
+            spec = importlib.util.find_spec(paquet)
+        except ModuleNotFoundError:
+            continue
+        for dossier in (spec.submodule_search_locations or []) if spec else []:
+            fichiers += sorted(glob.glob(os.path.join(dossier, "lib*.so*")))
+
+    for _ in range(2):
+        restants = []
+        for fichier in fichiers:
+            try:
+                ctypes.CDLL(fichier, mode=ctypes.RTLD_GLOBAL)
+            except OSError:
+                restants.append(fichier)
+        fichiers = restants
+
+
 def _choisir_materiel() -> tuple[str, str]:
-    """GPU en float16 si disponible, sinon CPU en int8 (plus lent mais fonctionnel)."""
+    """GPU en float16 si disponible, sinon CPU en int8 (plus lent mais fonctionnel).
+
+    Pour forcer le CPU : os.environ["ASR_FORCER_CPU"] = "1" avant le chargement.
+    """
+    if os.environ.get("ASR_FORCER_CPU") == "1":
+        return "cpu", "int8"
     if ctranslate2.get_cuda_device_count() > 0:
         return "cuda", "float16"
     return "cpu", "int8"
@@ -43,6 +77,8 @@ def _choisir_materiel() -> tuple[str, str]:
 def charger_modele(nom: str = WHISPER_MODELE) -> WhisperModel:
     """Charge le modèle une seule fois par nom (le chargement est coûteux)."""
     device, compute_type = _choisir_materiel()
+    if device == "cuda":
+        _precharger_bibliotheques_cuda()
     logger.info("Chargement Whisper '%s' sur %s (%s)", nom, device, compute_type)
     return WhisperModel(nom, device=device, compute_type=compute_type)
 
