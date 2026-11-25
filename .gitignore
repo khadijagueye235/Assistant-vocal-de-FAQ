@@ -3,6 +3,19 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .env
+
+# Audio : jamais versionné (voix de personnes réelles = données personnelles).
 *.wav
 *.mp3
+*.m4a
+*.ogg
+*.opus
+*.webm
+*.flac
+
+# Jeu de test oral : seuls le manifeste et la notice sont versionnés,
+# les enregistrements restent sur le Drive du groupe.
+data/audio_test/*
 !data/audio_test/.gitkeep
+!data/audio_test/manifeste.csv
+!data/audio_test/LISEZMOI.md
