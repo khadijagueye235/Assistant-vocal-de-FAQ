@@ -9,3 +9,7 @@ RESULTATS_DIR = RACINE / "results"
 # --- ASR ---
 WHISPER_MODELE = "small"   # à comparer plus tard avec "medium"
 LANGUE = "fr"
+
+# --- Pipeline ---
+# Dit à voix haute quand le VAD n'a détecté aucune parole.
+MESSAGE_RIEN_ENTENDU = "Je n'ai rien entendu. Pouvez-vous répéter votre question ?"
