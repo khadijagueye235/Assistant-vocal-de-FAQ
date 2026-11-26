@@ -14,6 +14,6 @@
 | 8 | Jeu de test oral (30 audios) | B | ⬜ à faire (manifeste prêt) | `data/audio_test/manifeste.csv` |
 | 9 | Mesures (taux, latences) | B | ⬜ à faire | `results/` |
 | 10 | Analyse des échecs | A + B | ⬜ à faire | `results/cas_d_echec.csv` |
-| 11 | README, fiche technique, support | C | ⬜ à faire | `README.md`, `docs/` |
+| 11 | README, fiche technique, support | C | 🟡 README de base, licence, CI et notebook Colab posés par A ; à compléter (interface, résultats du test, noms) | `README.md`, `docs/` |
 
 **Légende :** ✅ fait · 🟡 en cours · ⬜ à faire
