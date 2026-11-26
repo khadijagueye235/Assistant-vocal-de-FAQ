@@ -50,7 +50,7 @@ def _synthetiser(texte: str, voix: str, debit: str, nom: str) -> None:
     """Synthétise vers DEV_AUDIO_DIR/nom, en réessayant en cas d'échec réseau."""
     for essai in range(1, ESSAIS + 1):
         try:
-            chemin = parler(texte, voix=voix, debit=debit, dossier=DEV_AUDIO_DIR)
+            chemin = parler(texte, voix=voix, debit=debit, dossier=DEV_AUDIO_DIR, cache=False)
             chemin.replace(DEV_AUDIO_DIR / nom)
             return
         except ErreurTTS:

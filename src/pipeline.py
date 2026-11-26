@@ -19,7 +19,7 @@ from src import asr
 from src.asr import EntreeAudio, transcrire
 from src.config import MESSAGE_JE_NE_SAIS_PAS, MESSAGE_RIEN_ENTENDU, SEUIL_SIMILARITE
 from src.search import charger_moteur, chercher
-from src.tts import ErreurTTS, parler
+from src.tts import ErreurTTS, parler, prechauffer_voix
 
 journal = logging.getLogger(__name__)
 
@@ -65,13 +65,18 @@ class Reponse:
 
 
 def prechauffer() -> None:
-    """Charge tous les modèles et fait une inférence à vide.
+    """Charge les modèles, fait une inférence à vide et prépare toutes les voix.
 
     À appeler au démarrage (interface, mesures) : sinon la première question
-    paie le chargement des modèles et fausse les latences.
+    paie le chargement des modèles et fausse les latences. Les 32 messages
+    possibles (30 réponses + « je ne sais pas » + « rien entendu ») sont
+    synthétisés en parallèle et mis en cache : la voix ne coûte ensuite
+    presque plus rien. Sans réseau, le démarrage continue (voir tts.py).
     """
     asr.prechauffer()
-    charger_moteur()  # encode la FAQ, ce qui fait aussi tourner le modèle une fois
+    moteur = charger_moteur()  # encode la FAQ, ce qui fait aussi tourner le modèle une fois
+    messages = [e.reponse_vocale for e in moteur.faq]
+    prechauffer_voix([*messages, MESSAGE_JE_NE_SAIS_PAS, MESSAGE_RIEN_ENTENDU])
 
 
 @dataclass(frozen=True)

@@ -88,6 +88,9 @@ TTS_VOIX = _texte("TTS_VOIX", "fr-FR-DeniseNeural")
 TTS_DEBIT = _texte("TTS_DEBIT", "+0%")
 # Délai maximal (s) de connexion puis de réception avant d'abandonner la voix.
 TTS_DELAI_S = _entier("TTS_DELAI_S", 10)
+# Réutiliser l'audio d'un texte déjà synthétisé (les réponses de la FAQ sont fixes).
+# Désactiver (TTS_CACHE=0) pour mesurer la latence réelle d'Edge TTS.
+TTS_CACHE = _booleen("TTS_CACHE", True)
 
 # --- Messages de l'assistant ---
 # Dit à voix haute quand le VAD n'a détecté aucune parole.

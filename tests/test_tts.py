@@ -74,6 +74,50 @@ def test_aucun_audio_recu(faux_edge, tmp_path):
     assert list(tmp_path.iterdir()) == []
 
 
+def test_cache_meme_texte_un_seul_appel_reseau(faux_edge, tmp_path):
+    premier = tts.parler("Bonjour", dossier=tmp_path)
+    second = tts.parler("Bonjour", dossier=tmp_path)
+    assert premier == second
+    assert len(faux_edge.appels) == 1  # le second appel est servi par le cache
+
+
+def test_cache_distingue_voix_et_debit(faux_edge, tmp_path):
+    a = tts.parler("Bonjour", voix="fr-FR-DeniseNeural", dossier=tmp_path)
+    b = tts.parler("Bonjour", voix="fr-FR-HenriNeural", dossier=tmp_path)
+    c = tts.parler("Bonjour", voix="fr-FR-DeniseNeural", debit="-10%", dossier=tmp_path)
+    assert len({a, b, c}) == 3
+
+
+def test_sans_cache_chaque_appel_synthetise(faux_edge, tmp_path):
+    a = tts.parler("Bonjour", dossier=tmp_path, cache=False)
+    b = tts.parler("Bonjour", dossier=tmp_path, cache=False)
+    assert a != b
+    assert len(faux_edge.appels) == 2
+
+
+def test_panne_ne_met_rien_en_cache(faux_edge, tmp_path):
+    faux_edge.erreur = ConnectionError("réseau coupé")
+    with pytest.raises(tts.ErreurTTS):
+        tts.parler("Bonjour", dossier=tmp_path)
+    faux_edge.erreur = None
+    tts.parler("Bonjour", dossier=tmp_path)  # le réseau revient : on resynthétise
+    assert len(faux_edge.appels) == 2
+    assert len(list(tmp_path.iterdir())) == 1  # aucun fichier temporaire oublié
+
+
+def test_prechauffer_voix_remplit_le_cache_sans_doublon(faux_edge, tmp_path):
+    assert tts.prechauffer_voix(["Un", "Deux", "Un", "  "], dossier=tmp_path) == 2
+    assert len(faux_edge.appels) == 2
+    tts.parler("Deux", dossier=tmp_path)
+    assert len(faux_edge.appels) == 2  # déjà en cache
+
+
+def test_prechauffer_voix_ne_plante_pas_sans_reseau(faux_edge, tmp_path, caplog):
+    faux_edge.erreur = ConnectionError("réseau coupé")
+    assert tts.prechauffer_voix(["Un", "Deux"], dossier=tmp_path) == 0
+    assert "incomplet" in caplog.text
+
+
 @pytest.mark.reseau
 @besoin_ffmpeg
 def test_synthese_reelle(tmp_path):

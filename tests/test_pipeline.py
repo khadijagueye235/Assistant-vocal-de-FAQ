@@ -142,3 +142,16 @@ def test_reponse_non_modifiable(faux_pipeline):
     r = pipeline.repondre("peu_importe.wav")
     with pytest.raises(dataclasses.FrozenInstanceError):
         r.transcription = "modifiée"
+
+
+def test_prechauffer_prepare_toutes_les_voix(monkeypatch):
+    """Les 30 réponses vocales et les 2 messages fixes sont mis en cache au démarrage."""
+    textes = []
+    monkeypatch.setattr(pipeline.asr, "prechauffer", lambda: None)
+    monkeypatch.setattr(
+        pipeline, "charger_moteur", lambda: type("M", (), {"faq": list(FAQ.values())})
+    )
+    monkeypatch.setattr(pipeline, "prechauffer_voix", textes.extend)
+    pipeline.prechauffer()
+    assert {e.reponse_vocale for e in FAQ.values()} <= set(textes)
+    assert {MESSAGE_JE_NE_SAIS_PAS, MESSAGE_RIEN_ENTENDU} <= set(textes)
