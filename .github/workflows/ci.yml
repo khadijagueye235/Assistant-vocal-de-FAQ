@@ -1,0 +1,44 @@
+# Intégration continue : à chaque push et pull request, vérifie le style et
+# lance les tests rapides sur une machine propre.
+#
+# Les tests qui chargent un modèle (marqueur « modele », ~1 Go à télécharger)
+# ou appellent Edge TTS (marqueur « reseau ») sont exclus : ils tournent sur
+# Colab. HF_HUB_OFFLINE garantit qu'aucun test rapide ne télécharge un modèle
+# en douce.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HF_HUB_OFFLINE: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"  # même version que Colab
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Installer ffmpeg (dépendance système)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - name: Installer les dépendances
+        run: |
+          # torch en version CPU : 10 fois plus léger que la version GPU, inutile ici.
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements-dev.txt
+
+      - name: Style (ruff)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Tests rapides
+        run: pytest -q -m "not modele and not reseau"
