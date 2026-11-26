@@ -7,7 +7,7 @@ on peut construire dessus dès maintenant.
 ```python
 from src.pipeline import prechauffer, repondre
 
-prechauffer()  # une fois au démarrage (charge tous les modèles)
+prechauffer()  # une fois au démarrage : modèles + voix des 32 messages (~10 s de plus)
 r = repondre("question.m4a")  # ou le tuple / le chemin fourni par gr.Audio
 ```
 
@@ -28,7 +28,7 @@ r = repondre("question.m4a")  # ou le tuple / le chemin fourni par gr.Audio
 | `question_trouvee` | `str` ou `None` | Texte de cette question |
 | `score` | `float` ou `None` | Similarité de la meilleure candidate, même si elle est refusée par le seuil (plus c'est haut, plus c'est proche) |
 | `reponse_texte` | `str` | Réponse à afficher (la version lue est la même, avec sigles épelés et « francs CFA » au lieu de « XOF ») |
-| `audio_reponse` | `Path` ou `None` | Fichier MP3 de la réponse parlée (voix synthétique) ; `None` si la synthèse a échoué |
+| `audio_reponse` | `Path` ou `None` | Fichier MP3 de la réponse parlée (voix synthétique) ; `None` si la synthèse a échoué. Fichier **partagé** (cache) : le lire, ne jamais le modifier ni le supprimer |
 | `latences.asr_s` | `float` | Durée de la transcription, en secondes |
 | `latences.recherche_s` | `float` | Durée de la recherche, en secondes |
 | `latences.tts_s` | `float` | Durée de la synthèse vocale, en secondes |
@@ -57,7 +57,7 @@ Les latences sont **brutes** : arrondir uniquement à l'affichage.
 |---|---|
 | ASR | Réel (faster-whisper + VAD) |
 | Recherche | Réelle (multilingual-e5-small, index question + réponse, seuil 0,87) |
-| TTS | Réel (Edge TTS, voix fr-FR-DeniseNeural, connexion Internet nécessaire) |
+| TTS | Réel (Edge TTS, voix fr-FR-DeniseNeural), avec cache : environ 0,5 ms par réponse après `prechauffer()` (voir `docs/latence_tts.md`) |
 
 ## Exemple pour l'interface (C)
 
