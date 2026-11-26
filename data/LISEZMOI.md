@@ -7,6 +7,11 @@
 | `dev_audio/` | Les mêmes questions lues par 8 voix synthétiques (`python -m scripts.generer_dev_audio`) | non, régénérable |
 | `audio_test/` | Jeu de test oral de B (voix réelles), voir `audio_test/LISEZMOI.md` | manifeste seulement |
 
+**Origine du contenu :** les réponses de `faq.csv` sont adaptées des pages FAQ
+publiques de westernunion.com (lien de chaque réponse dans `url_source`). Ce
+contenu reste la propriété de Western Union et sert ici à un projet
+pédagogique ; le projet n'est ni affilié à Western Union ni approuvé par elle.
+
 **Règle d'or :** on règle le système (modèle, seuil, `question_recherche`) sur les
 jeux de **dev**, jamais sur `audio_test/`. Sinon le score final est truqué.
 
