@@ -94,6 +94,14 @@ def charger_modele(nom: str = WHISPER_MODELE) -> WhisperModel:
     device, compute_type = _choisir_materiel()
     if device == "cuda":
         _precharger_bibliotheques_cuda()
+    else:
+        # Niveau WARNING : affiché même sans configuration du journal (Colab,
+        # scripts). Des latences mesurées sur CPU par erreur fausseraient le rapport.
+        logger.warning(
+            "Aucun GPU utilisé : Whisper '%s' tourne sur CPU, environ 5 à 20 fois "
+            "plus lentement. Sur Colab : Exécution > Modifier le type d'exécution > GPU.",
+            nom,
+        )
     logger.info("Chargement Whisper '%s' sur %s (%s)", nom, device, compute_type)
     return WhisperModel(nom, device=device, compute_type=compute_type)
 

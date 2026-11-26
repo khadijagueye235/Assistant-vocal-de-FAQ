@@ -96,3 +96,16 @@ def test_transcription_reference(audio_reference):
 def test_silence_donne_transcription_vide():
     resultat = asr.transcrire(np.zeros(2 * asr.FREQUENCE_HZ, dtype=np.float32))
     assert resultat.est_vide
+
+
+def test_avertissement_visible_sur_cpu(monkeypatch, caplog):
+    """Un basculement silencieux vers le CPU fausserait les latences mesurées."""
+    monkeypatch.setattr(asr, "_choisir_materiel", lambda: ("cpu", "int8"))
+    monkeypatch.setattr(asr, "WhisperModel", lambda *args, **kwargs: "faux modèle")
+    asr.charger_modele.cache_clear()
+    try:
+        asr.charger_modele("tiny")
+    finally:
+        asr.charger_modele.cache_clear()  # ne pas laisser le faux modèle en cache
+    assert "CPU" in caplog.text
+    assert caplog.records[0].levelname == "WARNING"
