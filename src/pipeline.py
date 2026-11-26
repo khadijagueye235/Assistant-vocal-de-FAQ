@@ -4,16 +4,14 @@
 décrit dans docs/contrat_repondre.md. Sa signature et le type `Reponse` ne
 changeront plus ; seul l'intérieur évoluera.
 
-État actuel : ASR et recherche réels ; le TTS est SIMULÉ en attendant
-src/tts.py (champ `simulation=True` dans la réponse).
+Les trois étapes sont réelles. Si la synthèse vocale échoue (réseau coupé),
+la réponse écrite est quand même renvoyée, avec `audio_reponse=None`.
 """
 
 from __future__ import annotations
 
-import tempfile
+import logging
 import time
-import uuid
-import wave
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -21,8 +19,9 @@ from src import asr
 from src.asr import EntreeAudio, transcrire
 from src.config import MESSAGE_JE_NE_SAIS_PAS, MESSAGE_RIEN_ENTENDU, SEUIL_SIMILARITE
 from src.search import charger_moteur, chercher
+from src.tts import ErreurTTS, parler
 
-DOSSIER_AUDIO_SORTIE = Path(tempfile.gettempdir()) / "assistant_faq"
+journal = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -95,20 +94,16 @@ def _rechercher(texte: str) -> _Decision:
     return _Decision(e.id, e.question, resultat.score, e.reponse, e.reponse_vocale)
 
 
-# --- Étape provisoire : remplacée par src/tts.py ---
+def _dire(texte: str) -> Path | None:
+    """Synthétise la réponse ; renvoie None si la voix est indisponible.
 
-
-def _parler_simule(texte: str) -> Path:
-    """Simule le TTS : écrit 0,5 s de silence dans un fichier WAV."""
-    DOSSIER_AUDIO_SORTIE.mkdir(parents=True, exist_ok=True)
-    chemin = DOSSIER_AUDIO_SORTIE / f"reponse_{uuid.uuid4().hex[:8]}.wav"
-    frequence = 24_000
-    with wave.open(str(chemin), "wb") as fichier:
-        fichier.setnchannels(1)
-        fichier.setsampwidth(2)  # 16 bits
-        fichier.setframerate(frequence)
-        fichier.writeframes(b"\x00\x00" * (frequence // 2))
-    return chemin
+    Une panne du TTS ne doit pas priver l'utilisateur de la réponse écrite.
+    """
+    try:
+        return parler(texte)
+    except ErreurTTS as erreur:
+        journal.warning("Réponse renvoyée sans voix : %s", erreur)
+        return None
 
 
 def repondre(audio: EntreeAudio) -> Reponse:
@@ -133,7 +128,7 @@ def repondre(audio: EntreeAudio) -> Reponse:
         recherche_s = time.perf_counter() - t
 
     t = time.perf_counter()
-    audio_reponse = _parler_simule(decision.texte_lu if decision else MESSAGE_RIEN_ENTENDU)
+    audio_reponse = _dire(decision.texte_lu if decision else MESSAGE_RIEN_ENTENDU)
     tts_s = time.perf_counter() - t
 
     return Reponse(
@@ -144,5 +139,4 @@ def repondre(audio: EntreeAudio) -> Reponse:
         reponse_texte=decision.texte_affiche if decision else MESSAGE_RIEN_ENTENDU,
         audio_reponse=audio_reponse,
         latences=Latences(asr_s, recherche_s, tts_s, time.perf_counter() - debut),
-        simulation=True,
     )
