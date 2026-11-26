@@ -8,8 +8,8 @@
 | 2 | Nettoyage de la FAQ | A | ✅ fait | `data/faq.csv` |
 | 3 | ASR (faster-whisper + VAD) | A | ✅ testé (audio synthétique, CPU local et GPU Colab) | `src/asr.py` |
 | 4 | Recherche par embeddings | A | ✅ e5-small, index Q+R, seuil 0,87 calibré sur le dev | `src/search.py`, `scripts/` |
-| 5 | TTS (Edge TTS) | A | ⬜ à faire | `src/tts.py` |
-| 6 | Assemblage `repondre()` | A | 🟡 ASR et recherche branchés, TTS simulé | `src/pipeline.py`, `docs/contrat_repondre.md` |
+| 5 | TTS (Edge TTS) | A | ✅ voix Denise, sans voix si le réseau tombe | `src/tts.py` |
+| 6 | Assemblage `repondre()` | A | ✅ pipeline complet, plus rien de simulé | `src/pipeline.py`, `docs/contrat_repondre.md` |
 | 7 | Interface Gradio | C | ⬜ à faire | `app/` |
 | 8 | Jeu de test oral (30 audios) | B | ⬜ à faire (manifeste prêt) | `data/audio_test/manifeste.csv` |
 | 9 | Mesures (taux, latences) | B | ⬜ à faire | `results/` |
