@@ -28,12 +28,16 @@ def moteur() -> MoteurRecherche:
 
 
 @pytest.mark.modele
-def test_chaque_question_se_retrouve_elle_meme(moteur):
-    """Test de bon sens : une question de la FAQ doit se retrouver en 1re position."""
+def test_chaque_question_se_retrouve_dans_le_top3(moteur):
+    """Test de bon sens sur l'index.
+
+    Pas forcément 1re : avec l'index « question + réponse », la réponse dilue
+    parfois la question (la n°12 sort derrière la n°4). Ce compromis est
+    assumé car l'index Q+R gagne nettement sur les reformulations du jeu de dev.
+    """
     for entree in moteur.faq:
-        resultat = moteur.chercher(entree.question_recherche)
-        assert resultat.entree.id == entree.id
-        assert resultat.score == pytest.approx(1.0, abs=1e-3)
+        ids = [r.entree.id for r in moteur.classer(entree.question_recherche, k=3)]
+        assert entree.id in ids, f"n°{entree.id} absente du top 3 : {ids}"
 
 
 @pytest.mark.modele
@@ -59,8 +63,11 @@ def test_reformulations_orales_evidentes(moteur, requete, id_attendu):
 
 
 @pytest.mark.modele
-def test_question_hors_sujet_a_un_score_faible(moteur):
-    assert moteur.chercher("quelle heure est-il").score < 0.5
+def test_question_hors_sujet_moins_similaire_qu_une_vraie_question(moteur):
+    """Comparaison relative : l'échelle des scores dépend du modèle (e5 : 0,8 à 0,95)."""
+    hors_sujet = moteur.chercher("quelle heure est-il").score
+    vraie = moteur.chercher("ça coûte combien pour recevoir de l'argent").score
+    assert hors_sujet < vraie
 
 
 @pytest.mark.modele

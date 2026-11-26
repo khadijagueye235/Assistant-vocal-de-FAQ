@@ -23,7 +23,7 @@ from pathlib import Path
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-from src.config import EMBEDDING_MODELE, FAQ_CSV
+from src.config import EMBEDDING_AVEC_REPONSE, EMBEDDING_MODELE, EMBEDDING_PREFIXE, FAQ_CSV
 
 logger = logging.getLogger(__name__)
 
@@ -73,27 +73,37 @@ class MoteurRecherche:
         self,
         faq: list[EntreeFAQ],
         nom_modele: str = EMBEDDING_MODELE,
-        prefixe_requete: str = "",
+        prefixe: str = EMBEDDING_PREFIXE,
+        avec_reponse: bool = EMBEDDING_AVEC_REPONSE,
     ) -> None:
-        """Charge le modèle et encode les questions de la FAQ (coûteux, fait une fois).
+        """Charge le modèle et encode la FAQ (coûteux, fait une fois).
 
-        prefixe_requete : certains modèles (famille e5) attendent un préfixe
-        comme "query: " devant chaque texte ; vide pour les autres.
+        prefixe : certains modèles (famille e5) attendent un préfixe comme
+            "query: " devant chaque texte encodé ; vide pour les autres.
+        avec_reponse : indexer « question + réponse » au lieu de la question
+            seule (la réponse apporte du vocabulaire, mais aussi du bruit).
         """
         if not faq:
             raise ValueError("La FAQ est vide.")
         self.faq = faq
         self.nom_modele = nom_modele
-        self.prefixe_requete = prefixe_requete
+        self.prefixe = prefixe
+        self.avec_reponse = avec_reponse
         logger.info("Chargement du modèle d'embeddings '%s'", nom_modele)
         self.modele = SentenceTransformer(nom_modele)
-        # Matrice (30, dimension) : une ligne par question de la FAQ.
-        self.vecteurs_faq = self._encoder([e.question_recherche for e in faq])
+        # Matrice (30, dimension) : une ligne par entrée de la FAQ.
+        self.vecteurs_faq = self._encoder([self._texte_indexe(e) for e in faq])
+
+    def _texte_indexe(self, entree: EntreeFAQ) -> str:
+        """Texte qui représente une entrée de la FAQ dans l'index."""
+        if self.avec_reponse:
+            return f"{entree.question_recherche} {entree.reponse}"
+        return entree.question_recherche
 
     def _encoder(self, textes: list[str]) -> np.ndarray:
         """Transforme des textes en vecteurs normalisés (longueur 1)."""
         return self.modele.encode(
-            [self.prefixe_requete + t for t in textes],
+            [self.prefixe + t for t in textes],
             normalize_embeddings=True,
             convert_to_numpy=True,
         )

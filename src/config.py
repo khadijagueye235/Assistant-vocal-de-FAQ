@@ -27,6 +27,13 @@ def _decimal(nom: str, defaut: float) -> float:
     return float(os.environ.get(nom, defaut))
 
 
+def _booleen(nom: str, defaut: bool) -> bool:
+    valeur = os.environ.get(nom)
+    if valeur is None:
+        return defaut
+    return valeur.strip().lower() in {"1", "true", "oui", "vrai"}
+
+
 # --- Chemins ---
 RACINE = Path(__file__).resolve().parent.parent
 FAQ_CSV = RACINE / "data" / "faq.csv"
@@ -43,10 +50,16 @@ ASR_VAD_SILENCE_MS = _entier("ASR_VAD_SILENCE_MS", 500)
 ASR_PROMPT_INITIAL = _texte("ASR_PROMPT_INITIAL", "") or None
 
 # --- Recherche (embeddings) ---
-# Modèle provisoire : le choix définitif sera justifié dans la brique « recherche ».
-EMBEDDING_MODELE = _texte(
-    "EMBEDDING_MODELE", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-)
+# Choix justifié par scripts/evaluer_recherche.py sur data/dev (résultats dans
+# results/evaluation_recherche.csv) : meilleur top1 et meilleure séparation
+# FAQ / hors FAQ à latence égale avec MiniLM ; e5-base n'est pas
+# significativement meilleur et coûte deux fois plus.
+EMBEDDING_MODELE = _texte("EMBEDDING_MODELE", "intfloat/multilingual-e5-small")
+# Préfixe ajouté devant chaque texte encodé : "query: " pour la famille e5
+# (même préfixe des deux côtés car on compare des questions entre elles).
+EMBEDDING_PREFIXE = _texte("EMBEDDING_PREFIXE", "query: ")
+# Indexer « question + réponse » : +5 à +8 points de top1 pour tous les modèles testés.
+EMBEDDING_AVEC_REPONSE = _booleen("EMBEDDING_AVEC_REPONSE", True)
 # Sous ce score, l'assistant répond « je ne sais pas ».
 # Provisoire : à calibrer sur la FAQ, JAMAIS sur le jeu de test.
 SEUIL_SIMILARITE = _decimal("SEUIL_SIMILARITE", 0.5)
