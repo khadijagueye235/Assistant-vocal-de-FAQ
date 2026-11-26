@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.search import EntreeFAQ, MoteurRecherche, charger_faq, charger_moteur
+from src.search import EntreeFAQ, MoteurRecherche, charger_faq, charger_moteur, normaliser_requete
 
 # --- Lecture de la FAQ (sans modèle) ---
 
@@ -74,3 +74,31 @@ def test_question_hors_sujet_moins_similaire_qu_une_vraie_question(moteur):
 def test_requete_vide_refusee(moteur):
     with pytest.raises(ValueError):
         moteur.classer("   ")
+
+
+@pytest.mark.modele
+def test_requete_faite_que_de_ponctuation_refusee(moteur):
+    with pytest.raises(ValueError):
+        moteur.classer(" ?! ")
+
+
+@pytest.mark.parametrize(
+    ("brut", "attendu"),
+    [
+        ("Qu'est-ce qu'il faut pour s'inscrire ?", "qu'est-ce qu'il faut pour s'inscrire"),
+        ("C’est quoi le MTCN, là ?", "c'est quoi le mtcn là"),  # apostrophe typographique
+        ("« Bonjour »... merci !", "bonjour merci"),
+        ("déjà normalisée", "déjà normalisée"),
+    ],
+)
+def test_normaliser_requete(brut, attendu):
+    assert normaliser_requete(brut) == attendu
+
+
+@pytest.mark.modele
+def test_format_de_transcription_sans_effet_sur_le_score(moteur):
+    """Majuscule et ponctuation de Whisper ne doivent pas changer le résultat."""
+    ecrit = moteur.chercher("comment je fais pour retirer mon argent")
+    transcrit = moteur.chercher("Comment je fais pour retirer mon argent ?")
+    assert transcrit.entree.id == ecrit.entree.id
+    assert transcrit.score == pytest.approx(ecrit.score)

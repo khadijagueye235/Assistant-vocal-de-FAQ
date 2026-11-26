@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import csv
 import logging
+import re
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -26,6 +27,24 @@ from sentence_transformers import SentenceTransformer
 from src.config import EMBEDDING_AVEC_REPONSE, EMBEDDING_MODELE, EMBEDDING_PREFIXE, FAQ_CSV
 
 logger = logging.getLogger(__name__)
+
+# Ponctuation retirée des requêtes (on garde apostrophes et traits d'union,
+# qui font partie des mots : « l'argent », « est-ce »).
+_PONCTUATION = re.compile(r"[?!.,;:«»\"()…]+")
+
+
+def normaliser_requete(texte: str) -> str:
+    """Met une requête au format du jeu de développement : minuscules, sans ponctuation.
+
+    Whisper rend des phrases avec majuscule et ponctuation (« Qu'est-ce qu'il
+    faut ? »), alors que le seuil a été calibré sur des questions écrites en
+    minuscules sans ponctuation. Mesuré sur le dev audio : ajouter juste une
+    majuscule et un « ? » au texte fait perdre 12 points de top1, et normaliser
+    les transcriptions en fait regagner 14. On ne normalise PAS l'index
+    (mesuré : -8 points) : seule la requête est ramenée à ce format.
+    """
+    texte = _PONCTUATION.sub(" ", texte.lower().replace("’", "'"))
+    return re.sub(r"\s+", " ", texte).strip()
 
 
 @dataclass(frozen=True)
@@ -114,7 +133,8 @@ class MoteurRecherche:
         Le classement complet sert à l'analyse des échecs : savoir si la bonne
         question était 2e ou absente du haut du classement.
         """
-        if not texte.strip():
+        texte = normaliser_requete(texte)
+        if not texte:
             raise ValueError("Texte de requête vide.")
         vecteur = self._encoder([texte])[0]
         scores = self.vecteurs_faq @ vecteur  # produit scalaire = cosinus ici
