@@ -1,7 +1,20 @@
-faster-whisper
-sentence-transformers
-edge-tts
-gradio
-pandas
-openpyxl
-numpy
+# Dépendances d'exécution (Colab et local).
+#
+# Les bibliothèques propres au projet sont fixées à la version testée, pour
+# qu'une installation « à partir de zéro » donne le même résultat le jour J.
+# torch, numpy et pandas sont préinstallés sur Colab : on ne fixe qu'un minimum
+# pour ne pas forcer une réinstallation qui casserait l'environnement Colab.
+#
+# Dépendance système (hors pip) : ffmpeg, déjà présent sur Colab.
+# En local, installer torch d'abord en version CPU si pas de GPU NVIDIA :
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+faster-whisper==1.2.1
+ctranslate2==4.9.1
+sentence-transformers==6.3.0
+edge-tts==7.3.1
+gradio==6.32.0
+
+torch>=2.4
+numpy>=1.26
+pandas>=2.2

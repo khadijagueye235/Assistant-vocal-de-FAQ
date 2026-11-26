@@ -1,0 +1,9 @@
+# Fins de ligne : LF dans le dépôt et dans les fichiers, quel que soit le système
+# (Windows en local, Linux sur Colab). Évite les diffs fantômes.
+* text=auto eol=lf
+
+# Fichiers binaires : jamais convertis.
+*.mp3 binary
+*.wav binary
+*.png binary
+*.pdf binary

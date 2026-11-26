@@ -1,0 +1,24 @@
+# Métadonnées du projet et configuration des outils (ruff, pytest).
+# Les dépendances restent dans requirements.txt (installées avec pip -r).
+
+[project]
+name = "assistant-vocal-faq"
+version = "0.1.0"
+description = "Assistant vocal qui répond aux questions fréquentes de Western Union Sénégal (ASR, embeddings, TTS)."
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# E/W : style PEP 8 · F : erreurs (variables inutilisées...) · I : ordre des imports
+# UP : syntaxe Python moderne · B : pièges courants
+select = ["E", "W", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]  # permet « from src... » dans les tests
+markers = [
+    "modele: test qui charge un modèle (plus lent, télécharge au premier lancement)",
+]
