@@ -61,8 +61,13 @@ EMBEDDING_PREFIXE = _texte("EMBEDDING_PREFIXE", "query: ")
 # Indexer « question + réponse » : +5 à +8 points de top1 pour tous les modèles testés.
 EMBEDDING_AVEC_REPONSE = _booleen("EMBEDDING_AVEC_REPONSE", True)
 # Sous ce score, l'assistant répond « je ne sais pas ».
-# Provisoire : à calibrer sur la FAQ, JAMAIS sur le jeu de test.
-SEUIL_SIMILARITE = _decimal("SEUIL_SIMILARITE", 0.5)
+# Calibré par scripts/calibrer_seuil.py sur data/dev (JAMAIS sur le jeu de test).
+# 0,87 : meilleur seuil si une erreur coûte autant qu'une bonne réponse, proche
+# du meilleur si elle coûte le double, et choisi bas dans le plateau 0,87-0,885
+# car les erreurs d'ASR feront baisser les scores réels. Sur le dev : 60/90
+# bonnes réponses, 15 refus à tort, 13/15 questions hors FAQ refusées.
+# Propre à e5-small : à recalibrer si le modèle change.
+SEUIL_SIMILARITE = _decimal("SEUIL_SIMILARITE", 0.87)
 
 # --- TTS (Edge TTS) ---
 TTS_VOIX = _texte("TTS_VOIX", "fr-FR-DeniseNeural")
