@@ -71,6 +71,10 @@ SEUIL_SIMILARITE = _decimal("SEUIL_SIMILARITE", 0.87)
 
 # --- TTS (Edge TTS) ---
 TTS_VOIX = _texte("TTS_VOIX", "fr-FR-DeniseNeural")
+# Vitesse de lecture, en écart relatif : "+0%" = normale, "-10%" = plus lente.
+TTS_DEBIT = _texte("TTS_DEBIT", "+0%")
+# Délai maximal (s) de connexion puis de réception avant d'abandonner la voix.
+TTS_DELAI_S = _entier("TTS_DELAI_S", 10)
 
 # --- Messages de l'assistant ---
 # Dit à voix haute quand le VAD n'a détecté aucune parole.

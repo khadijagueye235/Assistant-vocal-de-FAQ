@@ -21,4 +21,5 @@ testpaths = ["tests"]
 pythonpath = ["."]  # permet « from src... » dans les tests
 markers = [
     "modele: test qui charge un modèle (plus lent, télécharge au premier lancement)",
+    "reseau: test qui appelle un service en ligne (Edge TTS) ; ignorer hors ligne avec -m 'not reseau'",
 ]
