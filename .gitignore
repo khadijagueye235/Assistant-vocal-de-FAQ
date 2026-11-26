@@ -19,3 +19,6 @@ data/audio_test/*
 !data/audio_test/.gitkeep
 !data/audio_test/manifeste.csv
 !data/audio_test/LISEZMOI.md
+
+# Exception : audio de référence des tests (voix synthétique Edge TTS, aucune donnée personnelle).
+!tests/fixtures/*.mp3
