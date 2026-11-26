@@ -7,6 +7,7 @@ changeront plus ; seul l'intérieur évoluera.
 État actuel : l'ASR est réel ; la recherche et le TTS sont SIMULÉS en attendant
 src/search.py et src/tts.py (champ `simulation=True` dans la réponse).
 """
+
 from __future__ import annotations
 
 import tempfile
@@ -29,6 +30,7 @@ class Latences:
     total_s est mesuré de bout en bout : il peut dépasser légèrement la somme
     des étapes (le code entre les étapes prend aussi un peu de temps).
     """
+
     asr_s: float
     recherche_s: float
     tts_s: float
@@ -38,14 +40,15 @@ class Latences:
 @dataclass(frozen=True)
 class Reponse:
     """Tout ce que produit une question posée à l'assistant."""
-    transcription: str               # ce que l'ASR a compris
-    id_question: int | None          # id dans faq.csv ; None = aucune question retenue
-    question_trouvee: str | None     # texte de la question de la FAQ retenue
-    score: float | None              # similarité de la recherche ; None si pas de recherche
-    reponse_texte: str               # ce que l'assistant répond (affiché et lu)
-    audio_reponse: Path | None       # fichier audio de la réponse parlée
+
+    transcription: str  # ce que l'ASR a compris
+    id_question: int | None  # id dans faq.csv ; None = aucune question retenue
+    question_trouvee: str | None  # texte de la question de la FAQ retenue
+    score: float | None  # similarité de la recherche ; None si pas de recherche
+    reponse_texte: str  # ce que l'assistant répond (affiché et lu)
+    audio_reponse: Path | None  # fichier audio de la réponse parlée
     latences: Latences
-    simulation: bool = False         # True tant qu'une étape est simulée
+    simulation: bool = False  # True tant qu'une étape est simulée
 
     @property
     def a_trouve(self) -> bool:
@@ -61,6 +64,7 @@ class Reponse:
 
 
 # --- Étapes provisoires : remplacées par src/search.py et src/tts.py ---
+
 
 def _chercher_simule(texte: str) -> tuple[int | None, str | None, float | None, str]:
     """Simule la recherche : renvoie toujours « aucune question retenue »."""

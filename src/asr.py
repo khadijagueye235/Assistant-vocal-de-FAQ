@@ -1,4 +1,5 @@
 """ASR : audio -> texte français avec faster-whisper et filtre VAD."""
+
 from __future__ import annotations
 
 import ctypes
@@ -12,13 +13,18 @@ import time
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
-from typing import Union
 
 import ctranslate2
 import numpy as np
 from faster_whisper import WhisperModel
 
-from src.config import LANGUE, WHISPER_MODELE
+from src.config import (
+    ASR_BEAM_SIZE,
+    ASR_PROMPT_INITIAL,
+    ASR_VAD_SILENCE_MS,
+    LANGUE,
+    WHISPER_MODELE,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +34,13 @@ FREQUENCE_HZ = 16_000  # fréquence attendue par Whisper
 # - chemin de fichier (wav, mp3, m4a...) : cas des fichiers du jeu de test ;
 # - tableau numpy : signal mono float32 déjà échantillonné à 16 kHz ;
 # - tuple (fréquence, tableau) : format renvoyé par défaut par gr.Audio de Gradio.
-EntreeAudio = Union[str, Path, np.ndarray, tuple[int, np.ndarray]]
+EntreeAudio = str | Path | np.ndarray | tuple[int, np.ndarray]
 
 
 @dataclass(frozen=True)
 class Transcription:
     """Résultat d'une transcription. Les durées sont en secondes, non arrondies."""
+
     texte: str
     duree_audio_s: float
     temps_s: float
@@ -149,7 +156,8 @@ def _depuis_gradio(frequence: int, signal: np.ndarray) -> np.ndarray:
     if signal.size == 0:
         raise ValueError("Enregistrement vide : aucun son reçu du micro.")
     if np.issubdtype(signal.dtype, np.integer):
-        signal = signal.astype(np.float32) / np.iinfo(signal.dtype).max
+        # int16 va de -32768 à 32767 : diviser par 32768 garde tout dans [-1, 1].
+        signal = signal.astype(np.float32) / (np.iinfo(signal.dtype).max + 1)
     signal = signal.astype(np.float32)
     if signal.ndim == 2:
         signal = signal.mean(axis=1)
@@ -180,8 +188,8 @@ def transcrire(
     audio: EntreeAudio,
     nom_modele: str = WHISPER_MODELE,
     langue: str = LANGUE,
-    beam_size: int = 5,
-    prompt_initial: str | None = None,
+    beam_size: int = ASR_BEAM_SIZE,
+    prompt_initial: str | None = ASR_PROMPT_INITIAL,
 ) -> Transcription:
     """Transcrit un audio : chemin de fichier, tableau numpy 16 kHz ou tuple Gradio.
 
@@ -197,7 +205,7 @@ def transcrire(
         language=langue,
         beam_size=beam_size,
         vad_filter=True,
-        vad_parameters={"min_silence_duration_ms": 500},
+        vad_parameters={"min_silence_duration_ms": ASR_VAD_SILENCE_MS},
         condition_on_previous_text=False,  # évite les boucles d'hallucination
         initial_prompt=prompt_initial,
     )
