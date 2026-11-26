@@ -22,3 +22,5 @@ data/audio_test/*
 
 # Exception : audio de référence des tests (voix synthétique Edge TTS, aucune donnée personnelle).
 !tests/fixtures/*.mp3
+# Jeu de dev audio : voix synthétiques régénérables (python -m scripts.generer_dev_audio).
+data/dev_audio/
