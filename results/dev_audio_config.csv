@@ -1,0 +1,106 @@
+fichier,id_attendu,particularites,voix,question,transcription,erreurs_mots,mots,id_texte,score_texte,id_audio,score_audio,asr_s
+dev_000.mp3,1,hésitation;oral,fr-FR-HenriNeural,euh comment on fait pour envoyer de l'argent par internet,"Eux, comment on fait pour envoyer de l'argent par Internet ?",1,10,4,0.9081,4,0.902,1.963
+dev_001.mp3,1,oral,fr-FR-DeniseNeural,je veux faire un transfert en ligne je dois faire quoi,Je veux faire un transfert en ligne je dois faire quoi ?,0,11,1,0.9137,1,0.9137,1.894
+dev_002.mp3,1,wolof,fr-BE-GerardNeural,dama bëgg envoyer xaalis sur le site comment ça marche,"Dana Begg, envoyée excellée sur le site, commence à marche.",6,10,4,0.8594,4,0.8402,2.003
+dev_003.mp3,2,oral,fr-FR-EloiseNeural,j'ai envoyé en ligne au bout de combien de temps la personne peut retirer,J'ai envoyé en ligne au bout de combien de temps la personne contient.,2,15,2,0.8933,2,0.8842,2.026
+dev_004.mp3,2,oral,fr-CH-FabriceNeural,si j'envoie par l'application ça arrive quand,"Si j'envoie par l'application, ça arrive quand ?",0,9,19,0.8594,19,0.8594,1.934
+dev_005.mp3,2,hésitation,fr-BE-CharlineNeural,bon euh le délai pour que l'argent envoyé en ligne soit disponible,"Bon, eux le délai pour que l'argent envoyé en ligne soit disponible.",1,12,2,0.9171,2,0.9152,2.002
+dev_006.mp3,3,oral,fr-CA-AntoineNeural,je peux payer avec quelle carte pour envoyer sur internet,Je peux payer avec quelle carte pour envoyer sur Internet ?,0,10,3,0.8776,3,0.8776,1.884
+dev_007.mp3,3,oral;local,fr-CH-ArianeNeural,est-ce que ma carte Visa marche pour le transfert en ligne,Est-ce que ma carte vise à marche pour le transfert en ligne ?,2,12,3,0.8901,3,0.8839,2.003
+dev_008.mp3,3,hésitation,fr-FR-HenriNeural,euh on paie comment quand on envoie par le site,"Eux, on paie comment quand on envoie par le site ?",1,9,4,0.8731,4,0.879,1.946
+dev_009.mp3,4,oral,fr-FR-DeniseNeural,je peux envoyer en ligne vers quels pays,Je peux envoyer en ligne vers quel pays.,1,8,4,0.9005,4,0.901,1.829
+dev_010.mp3,4,wolof;local,fr-BE-GerardNeural,ndax je peux envoyer par internet à quelqu'un au Sénégal même,NDAX je peux envoyer par internet à quelqu'un au Sénégal même.,0,12,4,0.9021,4,0.9021,2.028
+dev_011.mp3,4,oral,fr-FR-EloiseNeural,c'est vers où qu'on peut envoyer avec le site,Se faire ou qu'on peut renvoyer avec le site.,5,11,4,0.8891,4,0.8644,1.946
+dev_012.mp3,5,oral,fr-CH-FabriceNeural,c'est quoi le montant maximum pour envoyer en ligne,C'est quoi le montant maximum pour envoyer en ligne ?,0,10,5,0.8875,5,0.8875,1.992
+dev_013.mp3,5,oral,fr-BE-CharlineNeural,jusqu'à combien je peux envoyer par internet,Jusqu'à combien je peux envoyer à Internet ?,1,8,5,0.8892,5,0.8889,1.91
+dev_014.mp3,5,wolof,fr-CA-AntoineNeural,ñaata la limite par jour pour les transferts sur le site,Natale à limite par jour pour les transferts sur le site.,2,11,5,0.872,4,0.874,1.949
+dev_015.mp3,6,oral,fr-CH-ArianeNeural,comment je sais que mon envoi en ligne est passé,Comment je sais que mon envoi en ligne est passé ?,0,10,6,0.8898,6,0.8898,2.007
+dev_016.mp3,6,hésitation,fr-FR-HenriNeural,euh j'ai fait le transfert sur l'appli est-ce qu'il est validé,J'ai fait le transfert sur l'appli « Est-ce qu'il est validé ? »,0,14,8,0.8778,8,0.8761,2.156
+dev_017.mp3,6,oral,fr-FR-DeniseNeural,on me confirme comment que le transfert en ligne a marché,On me confirme comment que le transfert en ligne a marché.,0,11,1,0.8984,1,0.8984,1.918
+dev_018.mp3,7,oral,fr-BE-GerardNeural,comment savoir si la personne a bien reçu l'argent,Comment savoir si la personne a bien reçu l'argent ?,0,10,7,0.8939,7,0.8939,1.946
+dev_019.mp3,7,oral,fr-FR-EloiseNeural,je veux suivre mon transfert pour voir s'il est arrivé,Je veux suivre mon transfert pour voir s'il est arrivé.,0,11,7,0.8863,7,0.8863,1.952
+dev_020.mp3,7,wolof,fr-CH-FabriceNeural,ndax sama mbokk a reçu le xaalis comment vérifier,NDX Samambok a reçu le Xali comment vérifier.,4,9,7,0.851,17,0.8405,1.91
+dev_021.mp3,8,oral,fr-BE-CharlineNeural,est-ce qu'on me donne un reçu après le transfert,Est-ce qu'on me donne un reçu après le transfert ?,0,11,8,0.8968,8,0.8968,1.989
+dev_022.mp3,8,hésitation,fr-CA-AntoineNeural,euh je peux avoir une preuve de mon envoi,Plus je peux avoir une preuve de mon envoi.,1,8,8,0.8837,8,0.8721,1.881
+dev_023.mp3,8,oral,fr-CH-ArianeNeural,où je trouve le justificatif de mon transfert,Où je trouve le justificatif de mon transfert.,0,8,8,0.901,8,0.901,1.908
+dev_024.mp3,9,oral,fr-FR-HenriNeural,comment je fais vérifier mon compte pour envoyer en ligne,Comment je fais vérifier mon compte pour envoyer en ligne ?,0,10,1,0.8871,1,0.8871,1.94
+dev_025.mp3,9,oral,fr-FR-DeniseNeural,ils demandent un selfie et la pièce pour valider le profil c'est comment,Il demande un selfie et la pièce pour valider le profil s'est comment.,3,14,9,0.917,9,0.9091,1.986
+dev_026.mp3,9,hésitation,fr-BE-GerardNeural,euh la vérification d'identité sur le site ça se passe comment,"Et la vérification d'identité sur le site, ça se passe comment ?",1,11,1,0.8857,1,0.8838,2.023
+dev_027.mp3,10,oral,fr-FR-EloiseNeural,c'est quoi le MTCN là,C'est quoi le MTCN-LA ?,1,6,10,0.8742,10,0.858,1.881
+dev_028.mp3,10,oral,fr-CH-FabriceNeural,le numéro de contrôle ça sert à quoi,"Le numéro de contrôle, ça sert à quoi ?",0,8,10,0.8909,10,0.8909,1.842
+dev_029.mp3,10,hésitation,fr-BE-CharlineNeural,euh c'est quoi ce code à dix chiffres sur mon reçu,C'est quoi ce code à 10 chiffres sur mon reçu ?,1,11,5,0.8543,5,0.8487,1.974
+dev_030.mp3,11,oral,fr-CA-AntoineNeural,j'ai envoyé l'argent mais je veux annuler comment on fait,"J'ai envoyé l'argent, mais je veux annuler comment on fait.",0,12,11,0.8943,11,0.8943,1.959
+dev_031.mp3,11,oral,fr-CH-ArianeNeural,je me suis trompé je peux récupérer mon transfert,"Je me suis trompée, je peux récupérer mon transfert.",1,9,11,0.8654,11,0.8632,1.93
+dev_032.mp3,11,wolof,fr-FR-HenriNeural,dama bëgg annuler sama envoi est-ce que c'est possible,"Dama Beganulé, ça m'a envoie, est-ce que c'est possible ?",5,11,11,0.8769,11,0.8499,2.064
+dev_033.mp3,12,oral,fr-FR-DeniseNeural,il faut obligatoirement créer un compte pour envoyer sur internet,Il faut obligatoirement créer un compte pour envoyer sur Internet.,0,10,12,0.8894,12,0.8894,1.926
+dev_034.mp3,12,oral,fr-BE-GerardNeural,est-ce que je peux envoyer en ligne sans m'inscrire,Est-ce que je peux envoyer en ligne sans l'inscrire ?,1,11,12,0.8873,12,0.8871,1.915
+dev_035.mp3,12,hésitation,fr-FR-EloiseNeural,euh faut s'enregistrer avant d'envoyer par le site,Ne faut s'enregistrer avant d'envoyer par le site.,1,9,12,0.8747,4,0.8631,1.947
+dev_036.mp3,13,oral,fr-CH-FabriceNeural,l'inscription sur le site c'est payant,L'inscription sur le site c'est payant.,0,8,13,0.8884,13,0.8884,1.833
+dev_037.mp3,13,oral,fr-BE-CharlineNeural,ça coûte quelque chose de créer un compte Western Union,Ça coûte quelque chose de créer un compte Western Union.,0,10,13,0.8932,13,0.8932,1.882
+dev_038.mp3,13,wolof,fr-CA-AntoineNeural,ndax ils font payer pour s'inscrire,"NDAX, ils font payer pour s'inscrire.",0,7,13,0.867,13,0.867,1.899
+dev_039.mp3,14,oral,fr-CH-ArianeNeural,qu'est-ce qu'il faut avoir pour s'inscrire,Qu'est-ce qu'il faut avoir pour s'inscrire ?,0,10,14,0.8933,14,0.8933,1.967
+dev_040.mp3,14,hésitation,fr-FR-HenriNeural,euh c'est quoi les conditions pour ouvrir un compte sur le site,Le c'est quoi les conditions pour ouvrir un compte sur le site ?,1,12,14,0.8908,14,0.8798,1.987
+dev_041.mp3,14,oral,fr-FR-DeniseNeural,il faut quel âge et quels papiers pour s'enregistrer,Il faut quel âge et quel papier pour s'enregistrer.,2,10,14,0.8779,14,0.8655,1.982
+dev_042.mp3,15,oral,fr-BE-GerardNeural,comment je change mes informations sur mon compte,Comment je change mes informations sur mon compte ?,0,8,15,0.8845,15,0.8845,1.921
+dev_043.mp3,15,oral,fr-FR-EloiseNeural,j'ai changé de numéro je mets à jour mon profil comment,"J'ai changé de numéro, je m'ai acheté mon profil, comment ?",3,12,15,0.9044,15,0.8794,2.082
+dev_044.mp3,15,hésitation,fr-CH-FabriceNeural,euh modifier mon adresse sur Western Union,Modifiez mon adresse sur Western Union.,1,6,15,0.8889,15,0.9005,1.897
+dev_045.mp3,16,oral,fr-BE-CharlineNeural,je peux créer plusieurs comptes,Je peux créer plusieurs comptes.,0,5,16,0.9139,16,0.9139,1.779
+dev_046.mp3,16,oral,fr-CA-AntoineNeural,est-ce que je peux m'inscrire deux fois avec le même numéro,Est-ce que je peux m'inscrire deux fois avec le même numéro ?,0,13,16,0.9237,16,0.9237,1.991
+dev_047.mp3,16,oral,fr-CH-ArianeNeural,on a droit à combien de comptes par personne,On a droit à combien de comptes par personne ?,0,9,16,0.8742,16,0.8742,1.922
+dev_048.mp3,17,oral;local,fr-FR-HenriNeural,comment la personne sait que l'argent est arrivé sur son Wave,Comment la personne sait que l'argent est arrivé sur son web ?,1,12,17,0.8821,17,0.8819,1.885
+dev_049.mp3,17,oral,fr-FR-DeniseNeural,le bénéficiaire est prévenu comment quand il reçoit sur son téléphone,Le bénéficiaire est prévenu comment quand il reçoit sur son téléphone ?,0,11,17,0.9077,17,0.9077,2.006
+dev_050.mp3,17,wolof;hésitation;local,fr-BE-GerardNeural,euh sama mbokk il va recevoir un message quand le xaalis arrive sur Orange Money,"Euxsama Mok, il va recevoir un message quand le Xellie arrive sur Orange Money.",3,14,17,0.8656,17,0.8582,2.094
+dev_051.mp3,18,oral;local,fr-FR-EloiseNeural,comment envoyer l'argent sur Orange Money ou Wave,"Comment envoyer l'argent sur Orange Money, Wave ?",1,9,11,0.8684,29,0.8668,1.882
+dev_052.mp3,18,oral,fr-CH-FabriceNeural,je veux envoyer directement sur le téléphone de quelqu'un,Je veux envoyer directement sur le téléphone de quelqu'un.,0,10,18,0.8699,18,0.8699,1.905
+dev_053.mp3,18,wolof,fr-BE-CharlineNeural,dama bëgg envoyer xaalis sur un numéro de portable,Damadeg envoyait Xali sur un numéro de portable.,4,9,18,0.8496,17,0.8428,1.894
+dev_054.mp3,19,oral,fr-CA-AntoineNeural,le taux de change il est calculé comment,Le taux de change est calculé comment ?,1,8,19,0.9089,19,0.9105,1.886
+dev_055.mp3,19,hésitation,fr-CH-ArianeNeural,euh quand j'envoie sur un portefeuille mobile c'est quel taux,"Eux, qu'on j'envoie sur un portefeuille mobile, c'est quel taux ?",3,11,19,0.9268,19,0.9212,2.096
+dev_056.mp3,19,oral,fr-FR-HenriNeural,comment on sait combien la personne va recevoir après conversion,Comment on sait combien la personne va recevoir après conversion ?,0,10,23,0.8598,23,0.8598,1.935
+dev_057.mp3,20,oral,fr-FR-DeniseNeural,je me suis trompé de numéro de téléphone qu'est-ce qui se passe,Je me suis trompé de numéro de téléphone qu'est-ce qui se passe ?,0,14,20,0.8825,20,0.8825,2.104
+dev_058.mp3,20,hésitation,fr-BE-GerardNeural,euh j'ai mis un mauvais numéro pour le transfert mobile,"Eux, j'ai mis un mauvais numéro pour le transfert mobile.",1,10,20,0.9077,20,0.9078,1.938
+dev_059.mp3,20,oral,fr-FR-EloiseNeural,si le numéro est faux l'argent va où,"Si le numéro FFA, l'argent va où ?",2,9,20,0.8959,20,0.8689,1.915
+dev_060.mp3,21,oral,fr-CH-FabriceNeural,la personne reçoit l'argent dans quelle monnaie sur son portefeuille,La personne reçoit l'argent dans quel monnaie sur son portefeuille.,1,11,21,0.92,21,0.9192,2.14
+dev_061.mp3,21,oral;local,fr-BE-CharlineNeural,ça arrive en francs CFA ou en euros sur le téléphone,Ça arrive en France CFA ou en Euro sur le téléphone.,2,11,19,0.8735,19,0.8656,1.971
+dev_062.mp3,21,hésitation,fr-CA-AntoineNeural,euh c'est quelle devise quand on reçoit sur le mobile,"Eux, c'est qu'elles devissent quand on reçoit sur le mobile.",4,10,21,0.892,19,0.876,2.054
+dev_063.mp3,22,oral,fr-CH-ArianeNeural,c'est quoi un portefeuille mobile,C'est quoi un portefeuille mobile ?,0,6,22,0.9284,22,0.9284,1.985
+dev_064.mp3,22,hésitation,fr-FR-HenriNeural,euh le mobile money c'est quoi exactement,"Le mobile money, c'est quoi exactement ?",0,7,22,0.9061,22,0.9039,1.877
+dev_065.mp3,22,oral;local,fr-FR-DeniseNeural,un compte sur le téléphone comme Wave c'est ça le portefeuille mobile,"Un compte sur le téléphone comme Wave, c'est ça le portefeuille mobile.",0,13,22,0.9275,22,0.9275,2.008
+dev_066.mp3,23,hésitation,fr-BE-GerardNeural,euh comment je fais pour récupérer l'argent qu'on m'a envoyé,"Eux, comment je fais pour récupérer l'argent qu'on m'a envoyé ?",1,12,23,0.8949,23,0.8989,2.022
+dev_067.mp3,23,oral,fr-FR-EloiseNeural,on m'a envoyé de l'argent je vais le chercher comment,"Où m'a envoyé de l'argent, je vais le chercher comment ?",1,12,23,0.887,23,0.8984,1.981
+dev_068.mp3,23,wolof,fr-CH-FabriceNeural,naka laay jël sama xaalis à l'agence,"Nacal, Aigel, Samak, salier à l'agence.",5,8,23,0.8288,23,0.8388,2.019
+dev_069.mp3,24,oral,fr-BE-CharlineNeural,ça coûte combien pour recevoir de l'argent,Ça coûte combien pour recevoir de l'argent ?,0,8,24,0.9079,24,0.9079,1.933
+dev_070.mp3,24,oral,fr-CA-AntoineNeural,est-ce que je paie des frais quand je reçois un transfert,Est-ce que je paie des frais quand je reçois un transfert ?,0,12,24,0.8841,24,0.8841,2.022
+dev_071.mp3,24,hésitation,fr-CH-ArianeNeural,euh recevoir de l'argent c'est gratuit,"Recevoir de l'argent, c'est gratuit.",0,7,24,0.8943,24,0.8929,1.946
+dev_072.mp3,25,oral,fr-FR-HenriNeural,on me donne l'argent en espèces à l'agence,On me donne l'argent en espèce à l'agence.,1,10,23,0.8863,23,0.8834,1.995
+dev_073.mp3,25,oral,fr-FR-DeniseNeural,quand je retire c'est en cash ou bien,"Quand je retire, c'est en cash ou bien ?",0,9,25,0.8789,25,0.8789,1.945
+dev_074.mp3,25,hésitation,fr-BE-GerardNeural,euh l'agent il paie en liquide,Le l'agent est père liquide.,4,6,25,0.874,25,0.8433,1.923
+dev_075.mp3,26,oral,fr-FR-EloiseNeural,c'est qui les agents Western Union ici,C'est qui les agents Western Union ici.,0,8,26,0.8863,26,0.8863,1.926
+dev_076.mp3,26,oral;local,fr-CH-FabriceNeural,les agents au Sénégal c'est des banques ou quoi,"Les agents au Sénégal, c'est des banques ou quoi ?",0,10,26,0.911,26,0.911,2.09
+dev_077.mp3,26,hésitation,fr-BE-CharlineNeural,euh qui représente Western Union au Sénégal,Eux qui représentent Western Union au Sénégal.,2,6,26,0.8766,26,0.901,1.936
+dev_078.mp3,27,oral;local,fr-CA-AntoineNeural,où est-ce que je peux trouver une agence Western Union à Dakar,Où est-ce que je peux trouver une agence Western Union à Dakar ?,0,13,27,0.9019,27,0.9019,1.949
+dev_079.mp3,27,wolof,fr-CH-ArianeNeural,fan la am agence Western Union bu jege,Fan la AIM Agence Western Union Budget G.,3,8,26,0.8547,29,0.8502,1.917
+dev_080.mp3,27,hésitation,fr-FR-HenriNeural,euh comment trouver le point Western Union le plus proche,Et comment trouver le point Western Union le plus proche ?,1,9,27,0.8692,27,0.8764,1.869
+dev_081.mp3,28,oral,fr-FR-DeniseNeural,les agences ouvrent à quelle heure,Les agents s'ouvrent à quelle heure ?,2,6,28,0.8927,28,0.8855,1.898
+dev_082.mp3,28,oral,fr-BE-GerardNeural,est-ce qu'il y a des agences ouvertes le dimanche,Est-ce qu'il y a des agences ouvertes le dimanche ?,0,11,28,0.8625,28,0.8625,2.194
+dev_083.mp3,28,hésitation,fr-FR-EloiseNeural,euh c'est quoi les horaires des points de vente,Peux-ce quoi les horaires des points de vente ?,2,9,28,0.8977,28,0.8887,1.941
+dev_084.mp3,29,oral,fr-CH-FabriceNeural,je veux envoyer de l'argent au guichet comment ça se passe,Je veux envoyer de l'argent aux guichets comment ça se passe.,2,12,29,0.9017,29,0.8989,2.033
+dev_085.mp3,29,hésitation,fr-BE-CharlineNeural,euh pour envoyer depuis une agence il faut faire quoi,"Pour envoyer depuis une agence, il faut faire quoi ?",0,9,29,0.8767,29,0.8793,2.545
+dev_086.mp3,29,wolof,fr-CA-AntoineNeural,dama bëgg envoyer xaalis à l'agence naka laay def,Damabeg envoyait Xali à l'agence Nakala et DEF.,6,10,23,0.8337,23,0.8529,3.203
+dev_087.mp3,30,oral,fr-CH-ArianeNeural,quels papiers il faut pour retirer l'argent,Quel papier il faut pour retirer l'argent ?,2,8,30,0.8949,30,0.8788,2.543
+dev_088.mp3,30,oral,fr-FR-HenriNeural,je peux retirer avec mon permis de conduire,Je peux retirer avec mon permis de conduire.,0,8,30,0.8581,30,0.8581,2.002
+dev_089.mp3,30,hésitation,fr-FR-DeniseNeural,euh il faut quelle pièce d'identité pour le retrait,Mais il faut quelle pièce d'identité pour le retrait ?,1,9,23,0.9004,23,0.8969,2.139
+dev_090.mp3,,hors_sujet,fr-BE-GerardNeural,quelle heure est-il,Quelle heure est-il ?,0,4,28,0.8585,28,0.8585,2.082
+dev_091.mp3,,hors_sujet;wolof,fr-FR-EloiseNeural,nanga def quel est le prix du riz au marché,"Mangadeuf, quel est le prix du riz au marché ?",2,10,5,0.8175,5,0.8188,2.058
+dev_092.mp3,,hors_sujet,fr-CH-FabriceNeural,qui a gagné le match du Sénégal hier,Qui a gagné le match du Sénégal hier.,0,8,26,0.8048,26,0.8048,1.937
+dev_093.mp3,,hors_sujet;local,fr-BE-CharlineNeural,il va pleuvoir demain à Dakar,Il va pleuvoir demain à Dakar.,0,6,23,0.7875,23,0.7875,1.879
+dev_094.mp3,,hors_sujet;local,fr-CA-AntoineNeural,donne-moi une recette de thiéboudienne,Donne-moi une recette de Thiboudienne.,1,6,23,0.8278,23,0.827,1.93
+dev_095.mp3,,hors_sujet,fr-CH-ArianeNeural,comment réinitialiser mon mot de passe Facebook,Comment réinitialiser mon mot de passe Facebook ?,0,7,15,0.8452,15,0.8452,1.917
+dev_096.mp3,,hors_sujet,fr-FR-HenriNeural,c'est combien le billet d'avion pour Paris,C'est combien le billet d'avion pour Paris ?,0,9,5,0.825,5,0.825,1.905
+dev_097.mp3,,hors_sujet;wolof,fr-FR-DeniseNeural,jërëjëf au revoir,"J'irai, j'ai, faut revoir.",5,3,11,0.7991,5,0.7977,2.043
+dev_098.mp3,,proche_hors_faq;local,fr-BE-GerardNeural,comment ouvrir un compte bancaire à la CBAO,Comment ouvrir un compte bancaire à la CBAO ?,0,8,3,0.8435,3,0.8435,2.268
+dev_099.mp3,,proche_hors_faq;local,fr-FR-EloiseNeural,c'est combien les frais pour retirer sur Wave,C'est combien les frais pour retirer sur Wave ?,0,9,13,0.8675,13,0.8675,2.089
+dev_100.mp3,,proche_hors_faq,fr-CH-FabriceNeural,quel est le taux de l'euro aujourd'hui,Quel est le taux de l'euro aujourd'hui ?,0,9,19,0.8445,19,0.8445,2.224
+dev_101.mp3,,proche_hors_faq,fr-BE-CharlineNeural,comment faire un prêt à la banque,Comment faire un prêt à la banque ?,0,7,1,0.8712,1,0.8712,1.944
+dev_102.mp3,,proche_hors_faq,fr-CA-AntoineNeural,est-ce que Western Union recrute,Est-ce que Western Union recrute ?,0,6,13,0.8521,13,0.8521,2.025
+dev_103.mp3,,proche_hors_faq,fr-CH-ArianeNeural,comment acheter du crédit téléphonique,Comment acheter du crédit téléphonique ?,0,5,18,0.8634,18,0.8634,1.885
+dev_104.mp3,,proche_hors_faq,fr-FR-HenriNeural,je veux porter plainte contre une arnaque par transfert,Je veux porter plainte contre une arnaque par transfert.,0,9,11,0.8931,11,0.8931,1.922
