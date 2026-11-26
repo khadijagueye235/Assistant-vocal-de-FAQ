@@ -4,8 +4,8 @@
 décrit dans docs/contrat_repondre.md. Sa signature et le type `Reponse` ne
 changeront plus ; seul l'intérieur évoluera.
 
-État actuel : l'ASR est réel ; la recherche et le TTS sont SIMULÉS en attendant
-src/search.py et src/tts.py (champ `simulation=True` dans la réponse).
+État actuel : ASR et recherche réels ; le TTS est SIMULÉ en attendant
+src/tts.py (champ `simulation=True` dans la réponse).
 """
 
 from __future__ import annotations
@@ -17,8 +17,10 @@ import wave
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from src import asr
 from src.asr import EntreeAudio, transcrire
-from src.config import MESSAGE_RIEN_ENTENDU
+from src.config import MESSAGE_JE_NE_SAIS_PAS, MESSAGE_RIEN_ENTENDU, SEUIL_SIMILARITE
+from src.search import charger_moteur, chercher
 
 DOSSIER_AUDIO_SORTIE = Path(tempfile.gettempdir()) / "assistant_faq"
 
@@ -44,8 +46,8 @@ class Reponse:
     transcription: str  # ce que l'ASR a compris
     id_question: int | None  # id dans faq.csv ; None = aucune question retenue
     question_trouvee: str | None  # texte de la question de la FAQ retenue
-    score: float | None  # similarité de la recherche ; None si pas de recherche
-    reponse_texte: str  # ce que l'assistant répond (affiché et lu)
+    score: float | None  # similarité de la meilleure candidate ; None si pas de recherche
+    reponse_texte: str  # réponse affichée (la version lue épelle les sigles)
     audio_reponse: Path | None  # fichier audio de la réponse parlée
     latences: Latences
     simulation: bool = False  # True tant qu'une étape est simulée
@@ -63,12 +65,37 @@ class Reponse:
         return ligne
 
 
-# --- Étapes provisoires : remplacées par src/search.py et src/tts.py ---
+def prechauffer() -> None:
+    """Charge tous les modèles et fait une inférence à vide.
+
+    À appeler au démarrage (interface, mesures) : sinon la première question
+    paie le chargement des modèles et fausse les latences.
+    """
+    asr.prechauffer()
+    charger_moteur()  # encode la FAQ, ce qui fait aussi tourner le modèle une fois
 
 
-def _chercher_simule(texte: str) -> tuple[int | None, str | None, float | None, str]:
-    """Simule la recherche : renvoie toujours « aucune question retenue »."""
-    return None, None, None, f"[Simulation] Recherche non branchée. Question comprise : {texte}"
+@dataclass(frozen=True)
+class _Decision:
+    """Résultat de la recherche après application du seuil."""
+
+    id_question: int | None
+    question: str | None
+    score: float
+    texte_affiche: str
+    texte_lu: str
+
+
+def _rechercher(texte: str) -> _Decision:
+    """Cherche la question la plus proche et applique le seuil « je ne sais pas »."""
+    resultat = chercher(texte)
+    if resultat.score < SEUIL_SIMILARITE:
+        return _Decision(None, None, resultat.score, MESSAGE_JE_NE_SAIS_PAS, MESSAGE_JE_NE_SAIS_PAS)
+    e = resultat.entree
+    return _Decision(e.id, e.question, resultat.score, e.reponse, e.reponse_vocale)
+
+
+# --- Étape provisoire : remplacée par src/tts.py ---
 
 
 def _parler_simule(texte: str) -> Path:
@@ -88,8 +115,8 @@ def repondre(audio: EntreeAudio) -> Reponse:
     """Répond à une question orale.
 
     `audio` : chemin de fichier, tableau numpy 16 kHz ou tuple Gradio
-    (voir src.asr.transcrire). Appeler src.asr.prechauffer() au démarrage
-    pour que la première mesure de latence ne soit pas faussée.
+    (voir src.asr.transcrire). Appeler prechauffer() au démarrage pour que
+    la première mesure de latence ne soit pas faussée.
     """
     debut = time.perf_counter()
 
@@ -98,24 +125,23 @@ def repondre(audio: EntreeAudio) -> Reponse:
     asr_s = time.perf_counter() - t
 
     if transcription.est_vide:
-        id_question, question, score = None, None, None
-        texte = MESSAGE_RIEN_ENTENDU
+        decision = None
         recherche_s = 0.0
     else:
         t = time.perf_counter()
-        id_question, question, score, texte = _chercher_simule(transcription.texte)
+        decision = _rechercher(transcription.texte)
         recherche_s = time.perf_counter() - t
 
     t = time.perf_counter()
-    audio_reponse = _parler_simule(texte)
+    audio_reponse = _parler_simule(decision.texte_lu if decision else MESSAGE_RIEN_ENTENDU)
     tts_s = time.perf_counter() - t
 
     return Reponse(
         transcription=transcription.texte,
-        id_question=id_question,
-        question_trouvee=question,
-        score=score,
-        reponse_texte=texte,
+        id_question=decision.id_question if decision else None,
+        question_trouvee=decision.question if decision else None,
+        score=decision.score if decision else None,
+        reponse_texte=decision.texte_affiche if decision else MESSAGE_RIEN_ENTENDU,
         audio_reponse=audio_reponse,
         latences=Latences(asr_s, recherche_s, tts_s, time.perf_counter() - debut),
         simulation=True,

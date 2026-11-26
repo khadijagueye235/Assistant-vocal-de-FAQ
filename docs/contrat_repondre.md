@@ -5,10 +5,9 @@ les mesures (B). La signature et les champs ci-dessous ne changeront plus :
 on peut construire dessus dès maintenant.
 
 ```python
-from src.asr import prechauffer
-from src.pipeline import repondre
+from src.pipeline import prechauffer, repondre
 
-prechauffer()                 # une fois au démarrage
+prechauffer()                 # une fois au démarrage (charge tous les modèles)
 r = repondre("question.m4a")  # ou le tuple / le chemin fourni par gr.Audio
 ```
 
@@ -27,8 +26,8 @@ r = repondre("question.m4a")  # ou le tuple / le chemin fourni par gr.Audio
 | `transcription` | `str` | Ce que l'ASR a compris (vide si aucune parole) |
 | `id_question` | `int` ou `None` | `id` de la question retenue dans `data/faq.csv` ; `None` si aucune |
 | `question_trouvee` | `str` ou `None` | Texte de cette question |
-| `score` | `float` ou `None` | Similarité de la recherche (plus c'est haut, plus c'est proche) |
-| `reponse_texte` | `str` | Réponse à afficher, identique à celle qui est lue |
+| `score` | `float` ou `None` | Similarité de la meilleure candidate, même si elle est refusée par le seuil (plus c'est haut, plus c'est proche) |
+| `reponse_texte` | `str` | Réponse à afficher (la version lue est la même, avec sigles épelés et « francs CFA » au lieu de « XOF ») |
 | `audio_reponse` | `Path` ou `None` | Fichier audio de la réponse parlée (voix synthétique) |
 | `latences.asr_s` | `float` | Durée de la transcription, en secondes |
 | `latences.recherche_s` | `float` | Durée de la recherche, en secondes |
@@ -44,23 +43,23 @@ Les latences sont **brutes** : arrondir uniquement à l'affichage.
 
 - **Aucune parole détectée** : `transcription` vide, `id_question` à `None`,
   `reponse_texte` = « Je n'ai rien entendu… », qui est aussi lu à voix haute.
-- **Question hors FAQ** (à venir avec le seuil) : `id_question` à `None`,
-  `reponse_texte` = message « je ne sais pas ».
+- **Question hors FAQ** (score sous `SEUIL_SIMILARITE`, 0,87 par défaut) :
+  `id_question` et `question_trouvee` à `None`, `score` renseigné,
+  `reponse_texte` = message « je ne sais pas » qui renvoie vers le service client.
 
 ## État actuel
 
 | Étape | État |
 |---|---|
 | ASR | Réel (faster-whisper + VAD) |
-| Recherche | **Simulée** : ne retient aucune question |
+| Recherche | Réelle (multilingual-e5-small, index question + réponse, seuil 0,87) |
 | TTS | **Simulé** : 0,5 s de silence |
 
 ## Exemple pour l'interface (C)
 
 ```python
 import gradio as gr
-from src.asr import prechauffer
-from src.pipeline import repondre
+from src.pipeline import prechauffer, repondre
 
 prechauffer()
 
@@ -84,9 +83,8 @@ gr.Interface(
 
 ```python
 import pandas as pd
-from src.asr import prechauffer
 from src.config import AUDIO_TEST_DIR, RESULTATS_DIR
-from src.pipeline import repondre
+from src.pipeline import prechauffer, repondre
 
 prechauffer()
 manifeste = pd.read_csv(AUDIO_TEST_DIR / "manifeste.csv")
