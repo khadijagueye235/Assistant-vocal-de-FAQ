@@ -46,8 +46,21 @@ LANGUE = _texte("LANGUE", "fr")
 ASR_BEAM_SIZE = _entier("ASR_BEAM_SIZE", 5)  # 1 = plus rapide, 5 = plus précis
 # Silence (ms) à partir duquel le VAD coupe un segment de parole.
 ASR_VAD_SILENCE_MS = _entier("ASR_VAD_SILENCE_MS", 500)
-# Vocabulaire métier soufflé à Whisper ; vide = aucun (sera réglé dans une brique dédiée).
-ASR_PROMPT_INITIAL = _texte("ASR_PROMPT_INITIAL", "") or None
+# Vocabulaire métier présenté à Whisper comme « ce qui précède » : il rend les
+# sigles et marques plus probables quand le son est ambigu.
+# Mesuré par scripts/evaluer_dev_audio.py sur le dev audio (Colab, GPU), contre
+# aucun prompt : TEM 12,8 % -> 10,8 % (questions à mots locaux : 12,6 % -> 7,4 %),
+# MTCN et Western Union désormais bien transcrits, utilité 10 -> 14, sans
+# accepter plus de questions hors FAQ (13/15 refusées). Préféré à une phrase
+# de contexte : TEM un peu meilleur, et la phrase a fait halluciner « au
+# Sénégal » dans une transcription. Une valeur vide désactive le prompt.
+ASR_PROMPT_INITIAL = (
+    _texte(
+        "ASR_PROMPT_INITIAL",
+        "Western Union, MTCN, Wave, Orange Money, Visa, francs CFA, Sénégal, Dakar.",
+    )
+    or None
+)
 
 # --- Recherche (embeddings) ---
 # Choix justifié par scripts/evaluer_recherche.py sur data/dev (résultats dans
@@ -62,10 +75,10 @@ EMBEDDING_PREFIXE = _texte("EMBEDDING_PREFIXE", "query: ")
 EMBEDDING_AVEC_REPONSE = _booleen("EMBEDDING_AVEC_REPONSE", True)
 # Sous ce score, l'assistant répond « je ne sais pas ».
 # Calibré par scripts/calibrer_seuil.py sur data/dev (JAMAIS sur le jeu de test).
-# 0,87 : meilleur seuil si une erreur coûte autant qu'une bonne réponse, proche
-# du meilleur si elle coûte le double, et choisi bas dans le plateau 0,87-0,885
-# car les erreurs d'ASR feront baisser les scores réels. Sur le dev : 58/90
-# bonnes réponses, 18 refus à tort, 13/15 questions hors FAQ refusées.
+# 0,87 : au milieu du plateau d'utilité 0,865-0,875 (une erreur coûte le double
+# d'une bonne réponse), à 2 points du meilleur sur le dev audio, et volontairement
+# pas plus haut car les voix réelles font baisser les scores. Sur le dev texte :
+# 64/90 bonnes réponses, 17 refus à tort, 13/15 questions hors FAQ refusées.
 # Propre à e5-small : à recalibrer si le modèle change.
 SEUIL_SIMILARITE = _decimal("SEUIL_SIMILARITE", 0.87)
 

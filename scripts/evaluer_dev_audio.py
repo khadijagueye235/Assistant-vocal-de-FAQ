@@ -1,8 +1,9 @@
 """Évalue l'ASR et la recherche sur la version audio du jeu de développement.
 
 Usage (depuis la racine du dépôt, après scripts.generer_dev_audio) :
-    python -m scripts.evaluer_dev_audio                        # réglages de la config
-    python -m scripts.evaluer_dev_audio --prompt "Western Union, MTCN" --label prompt
+    python -m scripts.evaluer_dev_audio                         # réglages de la config
+    python -m scripts.evaluer_dev_audio --prompt "" --label base   # sans vocabulaire métier
+    python -m scripts.evaluer_dev_audio --prompt "Western Union, MTCN" --label essai
 
 Pour chaque question, on compare deux chemins :
 - TEXTE : la question écrite va directement dans la recherche (ce qu'on a
@@ -82,11 +83,12 @@ def _bilan_au_seuil(lignes: list[dict], chemin: str) -> dict:
 def main() -> None:
     parseur = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parseur.add_argument(
-        "--prompt", default=ASR_PROMPT_INITIAL, help="vocabulaire soufflé à Whisper"
+        "--prompt", default=ASR_PROMPT_INITIAL, help='vocabulaire pour Whisper ("" = aucun)'
     )
     parseur.add_argument("--modele", default=WHISPER_MODELE, help="taille du modèle Whisper")
-    parseur.add_argument("--label", default="base", help="suffixe du fichier de résultats")
+    parseur.add_argument("--label", default="config", help="suffixe du fichier de résultats")
     args = parseur.parse_args()
+    args.prompt = args.prompt or None  # "" -> aucun prompt
 
     manifeste = _charger_manifeste()
     moteur = charger_moteur()

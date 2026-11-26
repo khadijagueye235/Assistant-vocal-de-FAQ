@@ -23,7 +23,7 @@ def recharger_config(monkeypatch):
 
 def test_valeurs_par_defaut():
     assert src.config.LANGUE == "fr"
-    assert src.config.ASR_PROMPT_INITIAL is None
+    assert "MTCN" in src.config.ASR_PROMPT_INITIAL
     assert 0 < src.config.SEUIL_SIMILARITE < 1
 
 
@@ -38,6 +38,10 @@ def test_remplacement_par_environnement(recharger_config):
     assert config.ASR_BEAM_SIZE == 1  # converti en entier
     assert config.SEUIL_SIMILARITE == 0.7  # converti en décimal
     assert config.ASR_PROMPT_INITIAL == "Western Union, MTCN"
+
+
+def test_prompt_vide_desactive_le_vocabulaire(recharger_config):
+    assert recharger_config(ASR_PROMPT_INITIAL="").ASR_PROMPT_INITIAL is None
 
 
 def test_chemins_existent():
