@@ -12,6 +12,8 @@ __pycache__/
 *.opus
 *.webm
 *.flac
+*.mp4
+*.aac
 
 # Jeu de test oral : seuls le manifeste et la notice sont versionnés,
 # les enregistrements restent sur le Drive du groupe.

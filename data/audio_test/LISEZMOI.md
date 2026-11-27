@@ -15,11 +15,12 @@ Seul `manifeste.csv` est versionné.
 
 | Colonne | Contenu | Exemple |
 |---|---|---|
-| `fichier` | Nom du fichier audio dans ce dossier | `q07_L03.m4a` |
-| `id_question_attendue` | `id` de la question de `data/faq.csv` qui doit être retrouvée | `7` |
+| `fichier` | Nom du fichier audio dans ce dossier | `q07_L05.m4a.mp4` |
+| `id_question_attendue` | `id` de la question de `data/faq.csv` qui doit être retrouvée, vide si la question est hors FAQ | `7` |
 | `locuteur` | Identifiant anonyme, jamais le nom | `L03` |
 | `consentement` | `oui` uniquement si l'accord a été recueilli | `oui` |
 | `date_enregistrement` | Format AAAA-MM-JJ | `2026-11-28` |
+| `transcription_reference` | Ce qui est **réellement dit**, écrit à l'écoute avant toute mesure (sert à calculer le taux d'erreur de l'ASR) | `euh comment je sais si mon argent est arrivé` |
 | `particularites` | Ce qui rend la question difficile, séparé par `;` | `hésitation;wolof;bruit` |
 
 ## Consignes d'enregistrement
