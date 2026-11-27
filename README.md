@@ -69,8 +69,8 @@ python -m pytest -q
 ```python
 from src.pipeline import prechauffer, repondre
 
-prechauffer()                      # une fois : charge les modèles et prépare les voix
-r = repondre("ma_question.m4a")    # chemin, tableau numpy ou tuple de gr.Audio
+prechauffer()  # une fois : charge les modèles et prépare les voix
+r = repondre("ma_question.m4a")  # chemin, tableau numpy ou tuple de gr.Audio
 print(r.transcription, r.id_question, r.reponse_texte, r.latences)
 ```
 
